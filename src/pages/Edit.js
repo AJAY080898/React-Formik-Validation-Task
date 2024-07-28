@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -35,52 +35,35 @@ const validate = values => {
 export default function Edit() {
   const { id } = useParams();
   const { books, setBooks } = useBooks();
-  const [modifiedData, setModifiedData] = useState([]);
+  const [modifiedData, setModifiedData] = useState(null);
 
   useEffect(() => {
-    setModifiedData(books.find(item => item.title === id))
-  }, [books,id])
+    setModifiedData(books.find(item => item.title === id));
+  }, [books, id]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      title: modifiedData.title,
-      author: modifiedData.author,
-      isbn: modifiedData.isbn,
-      date: modifiedData.date,
+      title: modifiedData?.title || '',
+      author: modifiedData?.author || '',
+      isbn: modifiedData?.isbn || '',
+      date: modifiedData?.date || '',
     },
     validate,
     onSubmit: values => {
       setBooks(books.map(item => {
-        if(item.title === id){
-          return {...values}
+        if (item.title === id) {
+          return { ...values };
+        } else {
+          return item;
         }
-        else{
-          return item
-        }
-
-      }))
-      alert('Data Update Successfully!')
-      navigate('/')
+      }));
+      alert('Data Updated Successfully!');
+      navigate('/');
     },
   });
-
-  
-  const handleUpdate = (event) => {
-    event.preventDefault();
-    setBooks(books.map(item => {
-      if (item.title === id) {
-        return { ...modifiedData }
-      }
-      else {
-        return item
-      }
-    }))
-    alert('Data Update Successfully!')
-    navigate('/')
-  }
 
   return (
     <div style={{ width: "1296px", height: "100vh" }} className='d-flex justify-content-center align-items-center'>
@@ -143,5 +126,5 @@ export default function Edit() {
         <Button type="submit">Update form</Button>
       </Form>
     </div>
-  )
+  );
 }
